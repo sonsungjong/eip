@@ -57,11 +57,27 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
         setShowAnswer(false);
     };
 
+    const renderSqlLine = (line, lineIndex) => {
+        const trimmedLine = line.trim();
+
+        return (
+            <div key={`${lineIndex}-${line}`} className="px-6 py-0.5 hover:bg-white/[0.025]">
+                <span className={`whitespace-pre-wrap font-mono text-[15px] leading-8 ${trimmedLine.startsWith('--') ? 'text-zinc-500' : 'text-zinc-200'}`}>
+                    {trimmedLine.length === 0 ? '\u00A0' : line}
+                </span>
+            </div>
+        );
+    };
+
+    const sqlLines = cleanCode.split('\n');
+    const memoIndex = sqlLines.findIndex((line) => line.trim() === '[메모]');
+    const visibleSqlLines = memoIndex === -1 ? sqlLines : sqlLines.slice(0, memoIndex);
+
     if (isSql) {
         return (
-            <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-white/20 flex items-center justify-center p-4 lg:p-12">
-                <div className="w-full max-w-5xl min-h-[720px] max-h-[900px] border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl bg-[#0a0a0a] flex flex-col">
-                    <div className="flex-none h-14 px-6 border-b border-zinc-800 flex items-center bg-[#0a0a0a]">
+            <div className="min-h-screen bg-[radial-gradient(circle_at_top,#1c2430_0,#050505_42%)] text-white font-sans selection:bg-white/20 flex items-center justify-center p-4 lg:p-12">
+                <div className="w-full max-w-5xl min-h-[720px] max-h-[900px] border border-white/10 rounded-3xl overflow-hidden shadow-2xl shadow-black/60 bg-[#090909] flex flex-col">
+                    <div className="flex-none h-14 px-6 border-b border-white/10 flex items-center bg-[#101010]/95">
                         <div className="flex items-center gap-2 opacity-50">
                             <div className="w-3 h-3 rounded-full bg-red-500"></div>
                             <div className="w-3 h-3 rounded-full bg-amber-500"></div>
@@ -69,10 +85,10 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-auto custom-scrollbar p-8 md:p-10">
-                        <div className="mx-auto max-w-4xl">
+                    <div className="flex-1 overflow-auto custom-scrollbar p-5 md:p-8">
+                        <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
                             {currentImage && (
-                                <div className="mb-8 p-1 bg-zinc-900 border border-zinc-800 rounded-lg inline-block">
+                                <div className="m-5 mb-3 p-1 bg-black/30 border border-white/10 rounded-lg inline-block">
                                     <img
                                         src={currentImage}
                                         alt="Problem Reference"
@@ -80,22 +96,22 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
                                     />
                                 </div>
                             )}
-                            <pre className="font-mono text-[15px] leading-8 text-zinc-300 whitespace-pre-wrap">
-                                {cleanCode}
-                            </pre>
+                            <div className="py-6">
+                                {visibleSqlLines.map(renderSqlLine)}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex-none p-6 flex justify-between items-center text-sm font-medium border-t border-zinc-900">
+                    <div className="flex-none p-6 flex justify-between items-center text-sm font-medium border-t border-white/10 bg-[#0c0c0c]">
                         <button
                             onClick={handlePrev}
                             disabled={stepIndex === 0}
-                            className="px-6 py-3 rounded-xl hover:bg-zinc-900 text-zinc-500 hover:text-white disabled:opacity-0 transition-all"
+                            className="px-6 py-3 rounded-xl hover:bg-white/[0.06] text-zinc-500 hover:text-white disabled:opacity-0 transition-all"
                         >
                             ← Previous
                         </button>
 
-                        <div className="text-sm text-zinc-600">
+                        <div className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-500">
                             {stepIndex + 1} / {variants.length}
                         </div>
 

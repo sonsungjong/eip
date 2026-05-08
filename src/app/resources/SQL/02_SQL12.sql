@@ -7,7 +7,11 @@ INSERT INTO 성적 VALUES
 (1923094, '홍찬종', '건축학', 4, 95),
 (2102934, '이사랑', '건축학', 2, 100);
 
-2학년이상 학생 중 학과별 평균 90 이상인 학과의 최대/최소점수
+쿼리 : SELECT _ FROM _ WHERE _ GROUP BY _ HAVING _ ORDER BY _
+순서 : FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+
+[해보기] 2학년이상 학생 중 학과별 평균 90 이상인 학과의 최대/최소점수
+[메모]
 SELECT 학과, MAX(점수) AS 최대점수, MIN(점수) AS 최소점수
 FROM 성적
 WHERE 학년 >= 2
@@ -16,5 +20,3 @@ HAVING AVG(점수) >= 90
 ORDER BY 최대점수 DESC, 최소점수 DESC;
 
 
-쿼리 : SELECT _ FROM _ WHERE _ GROUP BY _ HAVING _ ORDER BY _
-순서 : FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
