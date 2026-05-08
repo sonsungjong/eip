@@ -35,14 +35,14 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white mb-4">
-            2026 정보처리기사 실기
+            2026 정보처리기사 실기 2회차
           </h1>
         </div>
 
         {/* Section 1: Practice Tests */}
         <div className="mb-20">
           <h2 className="text-2xl font-bold text-white mb-8 border-l-4 border-blue-500 pl-4">
-            연습문제
+            프로그래밍 언어 연습
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {languageCategories.map((category) => (
@@ -96,7 +96,7 @@ export default function Home() {
         {/* Section 3: Theory Quiz */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-8 border-l-4 border-emerald-500 pl-4">
-            이론 문제풀이
+            문제풀이
           </h2>
           <Link
             href="/quizzes"
@@ -107,7 +107,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
-                  📝 이론 문제풀이
+                  📝 문제풀이
                 </h3>
                 <p className="text-zinc-500 text-sm">정보처리기사 실기 대비 단답형/서술형 연습</p>
               </div>
@@ -122,7 +122,7 @@ export default function Home() {
       </div>
 
       <footer className="fixed bottom-0 w-full p-6 text-center text-zinc-800 text-xs pointer-events-none">
-        <p>2026 Exam Prep</p>
+        <p>2026 실기 2회차 대비</p>
       </footer>
     </div>
   );

@@ -16,7 +16,7 @@ export default async function QuizList() {
                         ← Back to Dashboard
                     </Link>
                     <h1 className="text-4xl font-bold text-white mb-2">
-                        📝 이론 문제풀이
+                        📝 문제풀이
                     </h1>
                     <p className="text-zinc-500">정보처리기사 실기 대비 단답형/서술형 연습</p>
                 </div>
