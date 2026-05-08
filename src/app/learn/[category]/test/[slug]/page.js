@@ -24,6 +24,7 @@ export default async function TestDetail({ params }) {
 
     // Load Problem Image (if exists)
     let problemImage = null;
+    let variantsWithImages = variants;
     try {
         const categoryUpper = category.toUpperCase();
         const imagePath = path.join(process.cwd(), 'src/app/resources', categoryUpper, `${slug}.png`);
@@ -33,6 +34,22 @@ export default async function TestDetail({ params }) {
             const base64Image = imageBuffer.toString('base64');
             problemImage = `data:image/png;base64,${base64Image}`;
         }
+
+        variantsWithImages = variants.map((variant) => {
+            const variantBaseName = path.basename(variant.filename, path.extname(variant.filename));
+            const variantImagePath = path.join(process.cwd(), 'src/app/resources', categoryUpper, `${variantBaseName}.png`);
+
+            if (!fs.existsSync(variantImagePath)) {
+                return variant;
+            }
+
+            const imageBuffer = fs.readFileSync(variantImagePath);
+            const base64Image = imageBuffer.toString('base64');
+            return {
+                ...variant,
+                problemImage: `data:image/png;base64,${base64Image}`
+            };
+        });
     } catch (e) {
         console.error("Failed to load problem image:", e);
     }
@@ -55,7 +72,7 @@ export default async function TestDetail({ params }) {
                 </Link>
             </div>
 
-            <TestRunner baseId={slug} category={category} variants={variants} answers={answers} problemImage={problemImage} />
+            <TestRunner baseId={slug} category={category} variants={variantsWithImages} answers={answers} problemImage={problemImage} />
         </div>
     );
 }

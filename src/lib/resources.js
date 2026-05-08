@@ -53,6 +53,36 @@ export async function getTests(category) {
     const files = fs.readdirSync(categoryDir);
     const validExtensions = testExtensions[category] || [];
 
+    if (category === 'sql') {
+        const groups = {};
+
+        files.forEach(file => {
+            if (!file.endsWith('.sql')) return;
+
+            const nameWithoutExt = path.basename(file, '.sql');
+            const match = nameWithoutExt.match(/^(\d{2})_SQL\d+$/);
+            if (!match) return;
+
+            const groupId = `${match[1]}_SQL`;
+            if (!groups[groupId]) {
+                groups[groupId] = {
+                    slug: groupId,
+                    title: groupId,
+                    category,
+                    files: []
+                };
+            }
+            groups[groupId].files.push({ file, suffix: '' });
+        });
+
+        return Object.values(groups)
+            .sort((a, b) => a.slug.localeCompare(b.slug, undefined, { numeric: true }))
+            .map((problem, index) => ({
+                ...problem,
+                title: `SQL ${index + 1}번`
+            }));
+    }
+
     // Group files by baseId
     const groups = {};
 
@@ -129,6 +159,26 @@ export async function getTestVariants(category, baseId) {
 
     const validExtensions = testExtensions[category] || [];
     const files = fs.readdirSync(categoryDir);
+
+    if (category === 'sql') {
+        const matchedFiles = files.filter(file => {
+            if (!file.endsWith('.sql')) return false;
+
+            const nameWithoutExt = path.basename(file, '.sql');
+            if (baseId.match(/^\d{2}_SQL$/)) {
+                return nameWithoutExt.match(new RegExp(`^${baseId}\\d+$`));
+            }
+            return nameWithoutExt === baseId;
+        });
+
+        return matchedFiles
+            .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+            .map(file => ({
+                filename: file,
+                type: 'example',
+                content: fs.readFileSync(path.join(categoryDir, file), 'utf-8')
+            }));
+    }
 
     // Find all files matching this baseId
     const matchedFiles = files.filter(file => {
