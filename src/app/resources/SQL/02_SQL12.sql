@@ -18,5 +18,3 @@ WHERE 학년 >= 2
 GROUP BY 학과
 HAVING AVG(점수) >= 90
 ORDER BY 최대점수 DESC, 최소점수 DESC;
-
-

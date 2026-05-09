@@ -62,7 +62,7 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
 
         return (
             <div key={`${lineIndex}-${line}`} className="px-6 py-0.5 hover:bg-white/[0.025]">
-                <span className={`whitespace-pre-wrap font-mono text-[15px] leading-8 ${trimmedLine.startsWith('--') ? 'text-zinc-500' : 'text-zinc-200'}`}>
+                <span className={`code-no-ligatures whitespace-pre-wrap font-mono text-[15px] leading-8 ${trimmedLine.startsWith('--') ? 'text-zinc-500' : 'text-zinc-200'}`}>
                     {trimmedLine.length === 0 ? '\u00A0' : line}
                 </span>
             </div>
