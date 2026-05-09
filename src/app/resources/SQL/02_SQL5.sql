@@ -1,6 +1,6 @@
-CREATE TABLE Table (사원번호 INT, 급여 INT);
-INSERT INTO Table VALUES (100, 400), (101, 380), (102, 410), (103, 350);
+CREATE TABLE 테이블 (사원번호 INT, 급여 INT);
+INSERT INTO 테이블 VALUES (100, 400), (101, 380), (102, 410), (103, 350);
 
 [해보기] 사원번호가 100보다 크고, 급여가 400이거나 사원번호가 102인 사원의 수를 카운트
 [정답]
-SELECT COUNT(*) FROM Table WHERE 사원번호 > 100 AND (급여 = 400 OR 사원번호 = 102);
+SELECT COUNT(*) FROM 테이블 WHERE 사원번호 > 100 AND (급여 = 400 OR 사원번호 = 102);

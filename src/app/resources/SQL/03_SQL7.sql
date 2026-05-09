@@ -1,4 +1,4 @@
-CREATE TABLE 직급 (
+CREATE TABLE 사원 (
     사원번호 INT PRIMARY KEY,
     사원명 VARCHAR(50) NOT NULL,
     부서명 VARCHAR(255),
