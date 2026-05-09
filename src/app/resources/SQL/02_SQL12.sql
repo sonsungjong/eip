@@ -11,7 +11,7 @@ INSERT INTO 성적 VALUES
 순서 : FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
 
 [해보기] 2학년이상 학생 중 학과별 평균 90 이상인 학과의 최대/최소점수
-[메모]
+[정답]
 SELECT 학과, MAX(점수) AS 최대점수, MIN(점수) AS 최소점수
 FROM 성적
 WHERE 학년 >= 2

@@ -4,5 +4,5 @@ INSERT INTO 학과 VALUES ('컴퓨터공학과', '02-1234-5678', '공학관');
 INSERT INTO 교수 VALUES ('김교수', '02-1234-5678');
 
 [해보기] 학과 테이블에서 전화번호 컬럼을 연쇄 삭제와 함께 삭제
-[메모]
+[정답]
 ALTER TABLE 학과 DROP COLUMN 전화번호 CASCADE;

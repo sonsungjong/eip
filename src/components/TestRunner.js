@@ -70,8 +70,10 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
     };
 
     const sqlLines = cleanCode.split('\n');
-    const memoIndex = sqlLines.findIndex((line) => line.trim() === '[메모]');
-    const visibleSqlLines = memoIndex === -1 ? sqlLines : sqlLines.slice(0, memoIndex);
+    const answerIndex = sqlLines.findIndex((line) => line.trim() === '[정답]');
+    const visibleSqlLines = answerIndex === -1 ? sqlLines : sqlLines.slice(0, answerIndex);
+    const answerSqlLines = answerIndex === -1 ? [] : sqlLines.slice(answerIndex + 1);
+    const hasSqlAnswer = answerSqlLines.some((line) => line.trim().length > 0);
 
     if (isSql) {
         return (
@@ -99,6 +101,14 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
                             <div className="py-6">
                                 {visibleSqlLines.map(renderSqlLine)}
                             </div>
+                            {showAnswer && hasSqlAnswer && (
+                                <div className="border-t border-white/10 bg-black/20 py-6">
+                                    <div className="px-6 pb-3 text-xs font-bold tracking-[0.2em] text-zinc-500">
+                                        정답
+                                    </div>
+                                    {answerSqlLines.map(renderSqlLine)}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -115,21 +125,32 @@ export default function TestRunner({ baseId, category, variants, answers = {}, p
                             {stepIndex + 1} / {variants.length}
                         </div>
 
-                        {stepIndex < variants.length - 1 ? (
-                            <button
-                                onClick={handleNext}
-                                className="px-6 py-3 rounded-xl bg-zinc-100 text-black hover:bg-white transition-all flex items-center gap-2"
-                            >
-                                Next Step →
-                            </button>
-                        ) : (
-                            <Link
-                                href={`/learn/${category}`}
-                                className="px-6 py-3 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all flex items-center gap-2"
-                            >
-                                Finish
-                            </Link>
-                        )}
+                        <div className="flex items-center gap-3">
+                            {hasSqlAnswer && (
+                                <button
+                                    onClick={() => setShowAnswer(!showAnswer)}
+                                    className="px-5 py-3 rounded-xl border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-all"
+                                >
+                                    {showAnswer ? '정답 숨기기' : '정답 보기'}
+                                </button>
+                            )}
+
+                            {stepIndex < variants.length - 1 ? (
+                                <button
+                                    onClick={handleNext}
+                                    className="px-6 py-3 rounded-xl bg-zinc-100 text-black hover:bg-white transition-all flex items-center gap-2"
+                                >
+                                    Next Step →
+                                </button>
+                            ) : (
+                                <Link
+                                    href={`/learn/${category}`}
+                                    className="px-6 py-3 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all flex items-center gap-2"
+                                >
+                                    Finish
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

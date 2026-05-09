@@ -4,5 +4,5 @@ CREATE TABLE T2 (A INT);
 INSERT INTO T2 VALUES (2), (4), (3);
 
 [해보기] T1과 T2의 합집합(중복 제거)을 구한 후 A 컬럼 기준 내림차순 정렬
-[메모]
+[정답]
 SELECT A FROM T1 UNION SELECT A FROM T2 ORDER BY A DESC;

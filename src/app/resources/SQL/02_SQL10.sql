@@ -3,5 +3,7 @@ INSERT INTO T1 VALUES (3258, 'smith'), (4324, 'allen'), (5432, 'scott');
 CREATE TABLE T2 (NO INT, RULE VARCHAR(10));
 INSERT INTO T2 VALUES (12, 's%'), (32, '%t%');
 
+[해보기]
 T1과 T2의 모든 조합(CROSS JOIN) 중에서 NAME이 RULE 패턴과 일치하는 행의 개수를 카운트
+[정답]
 SELECT COUNT(*) FROM T1 A CROSS JOIN T2 B WHERE A.NAME LIKE B.RULE;

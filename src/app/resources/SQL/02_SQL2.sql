@@ -9,5 +9,5 @@ carrot | 영어회화 | P001
 carrot | 기초독일 | P004
 orange | 영어회화 | P003
 orange | 기초독일 | P004
-[메모]
+[정답]
 INSERT INTO 데이터베이스 VALUES ('apple', '영어회화', 'P001'), ('banana', '기초독일', 'P002'), ('carrot', '영어회화', 'P001'), ('carrot', '기초독일', 'P004'), ('orange', '영어회화', 'P003'), ('orange', '기초독일', 'P004');
