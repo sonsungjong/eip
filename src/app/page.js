@@ -1,6 +1,47 @@
 import Link from "next/link";
 
-export default function Home() {
+const GITHUB_OWNER = "sonsungjong";
+const GITHUB_REPO = "eip";
+const GITHUB_BRANCH = "master";
+const GITHUB_DOWNLOAD_DIR = "downloads";
+
+export const revalidate = 60;
+
+async function getDownloadFiles() {
+  const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_DOWNLOAD_DIR}?ref=${GITHUB_BRANCH}`;
+
+  try {
+    const res = await fetch(apiUrl, {
+      headers: { Accept: "application/vnd.github+json" },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const items = await res.json();
+
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items
+      .filter((item) => item.type === "file" && !item.name.startsWith("."))
+      .map((item) => ({
+        name: item.name,
+        href:
+          item.download_url ||
+          `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_DOWNLOAD_DIR}/${encodeURIComponent(item.name)}`,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  } catch {
+    return [];
+  }
+}
+
+export default async function Home() {
+  const downloadFiles = await getDownloadFiles();
   const languageCategories = [
     {
       id: "c",
@@ -117,6 +158,36 @@ export default function Home() {
               </div>
             </div>
           </Link>
+        </div>
+
+        <div className="mt-20">
+          <h2 className="text-2xl font-bold text-white mb-8 border-l-4 border-zinc-500 pl-4">
+            자료 다운로드
+          </h2>
+
+          {downloadFiles.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-zinc-800 bg-[#0a0a0a] p-8 text-center text-zinc-500">
+              등록된 다운로드 자료가 없습니다.
+            </div>
+          ) : (
+            <div className="grid gap-3">
+              {downloadFiles.map((file) => (
+                <a
+                  key={file.name}
+                  href={file.href}
+                  download
+                  className="group flex items-center justify-between rounded-xl border border-zinc-800 bg-[#0a0a0a] px-5 py-4 transition-all hover:border-zinc-600 hover:bg-[#101010]"
+                >
+                  <span className="font-medium text-zinc-200 group-hover:text-white">
+                    {file.name}
+                  </span>
+                  <span className="text-sm font-bold text-zinc-600 group-hover:text-zinc-300">
+                    Download
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
       </div>
