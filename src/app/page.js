@@ -1,47 +1,31 @@
 import Link from "next/link";
+import fs from "fs";
+import path from "path";
 
 const GITHUB_OWNER = "sonsungjong";
 const GITHUB_REPO = "eip";
-const GITHUB_BRANCH = "master";
+const GITHUB_BRANCH = "main";
 const GITHUB_DOWNLOAD_DIR = "downloads";
 
-export const revalidate = 60;
+function getDownloadFiles() {
+  const downloadDir = path.join(process.cwd(), GITHUB_DOWNLOAD_DIR);
 
-async function getDownloadFiles() {
-  const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_DOWNLOAD_DIR}?ref=${GITHUB_BRANCH}`;
-
-  try {
-    const res = await fetch(apiUrl, {
-      headers: { Accept: "application/vnd.github+json" },
-      next: { revalidate: 60 },
-    });
-
-    if (!res.ok) {
-      return [];
-    }
-
-    const items = await res.json();
-
-    if (!Array.isArray(items)) {
-      return [];
-    }
-
-    return items
-      .filter((item) => item.type === "file" && !item.name.startsWith("."))
-      .map((item) => ({
-        name: item.name,
-        href:
-          item.download_url ||
-          `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_DOWNLOAD_DIR}/${encodeURIComponent(item.name)}`,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-  } catch {
+  if (!fs.existsSync(downloadDir)) {
     return [];
   }
+
+  return fs
+    .readdirSync(downloadDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && !entry.name.startsWith("."))
+    .map((entry) => ({
+      name: entry.name,
+      href: `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_DOWNLOAD_DIR}/${encodeURIComponent(entry.name)}`,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 }
 
-export default async function Home() {
-  const downloadFiles = await getDownloadFiles();
+export default function Home() {
+  const downloadFiles = getDownloadFiles();
   const languageCategories = [
     {
       id: "c",
