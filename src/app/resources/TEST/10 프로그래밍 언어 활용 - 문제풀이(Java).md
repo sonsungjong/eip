@@ -323,3 +323,74 @@ public class Main {
 
 *(해설: 배열 데이터는 `[[1, 2, 3], [4, 5, 6]]`로 들어갑니다. `numbers[1][1]`은 5이고, `numbers[0][2]`는 3이므로 5 + 3 = 8 입니다.)*
 </details>
+
+---
+
+## 📝 오버라이딩과 오버로딩
+
+**Q10.** 다음 Java 코드의 출력 결과를 쓰시오.
+
+```java
+class Parent {
+    void print(int x) {
+        System.out.print("P" + x);
+    }
+}
+
+class Child extends Parent {
+    void print(int x) {
+        System.out.print("C" + x);
+    }
+
+    void print(String x) {
+        System.out.print("S" + x);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Parent a = new Child();
+        Child b = new Child();
+
+        a.print(1);
+        b.print("2");
+    }
+}
+```
+
+<details>
+<summary>정답 및 해설 보기</summary>
+
+**C1S2**
+
+*(해설: `a`의 참조 타입은 `Parent`이지만 실제 객체는 `Child`이므로 오버라이딩된 `Child.print(int)`가 실행됩니다. `b.print("2")`는 매개변수가 문자열인 오버로딩 메서드 `print(String)`이 실행됩니다.)*
+</details>
+
+---
+
+## 📝 문자열 결합 순서
+
+**Q11.** 다음 Java 코드의 출력 결과를 쓰시오.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+
+        System.out.println("result=" + a + b);
+        System.out.println(a + b + "=result");
+    }
+}
+```
+
+<details>
+<summary>정답 및 해설 보기</summary>
+
+```text
+result=1020
+30=result
+```
+
+*(해설: 문자열과 `+` 연산을 하면 이후 값은 문자열로 이어 붙습니다. `"result=" + a + b`는 `"result=10" + 20`이 되어 `result=1020`입니다. 반면 `a + b + "=result"`는 정수 덧셈이 먼저 수행되어 `30=result`가 됩니다.)*
+</details>
