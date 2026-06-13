@@ -46,6 +46,23 @@ CREATE TABLE 학생 (
 | **CHECK** | 속성의 값에 대한 조건을 설정 |
 | **DEFAULT** | 속성의 기본값을 설정 |
 
+### 외래키 제약조건 작성 순서 ★2026년 1회차★
+외래키 제약조건에 이름을 붙일 때는 보통 `CONSTRAINT 제약조건명 FOREIGN KEY (자식칼럼) REFERENCES 부모테이블(부모칼럼)` 순서로 작성합니다.
+
+```sql
+CREATE TABLE PLAYER (
+    PLAYER_ID CHAR(7) NOT NULL,
+    PLAYER_NAME VARCHAR2(20) NOT NULL,
+    TEAM_ID CHAR(3) NOT NULL,
+    PRIMARY KEY (PLAYER_ID),
+    CONSTRAINT TEAM_FK
+        FOREIGN KEY (TEAM_ID)
+        REFERENCES TEAM (TEAM_ID2)
+);
+```
+
+> **빈칸형 핵심:** `CONSTRAINT` → `FOREIGN` → 자식 테이블의 외래키 칼럼 → `REFERENCES` → 부모 테이블의 참조 칼럼 순서로 봅니다.
+
 ### 외래키 참조 무결성 옵션 (ON DELETE / ON UPDATE)
 부모 테이블의 행이 삭제/수정될 때 자식 테이블의 외래키를 어떻게 처리할지 결정합니다.
 
@@ -113,6 +130,37 @@ FROM 테이블명
 
 * `DISTINCT`: 중복 제거
 * `ASC`: 오름차순(기본값) / `DESC`: 내림차순
+
+---
+
+### DISTINCT와 COUNT 행 수 계산 ★2026년 1회차★
+`SELECT`는 조건에 맞는 행을 그대로 반환하고, `DISTINCT`는 중복값을 제거합니다. `COUNT(DISTINCT 칼럼)`은 중복을 제거한 값의 개수를 반환합니다.
+
+**[STUDENT] 테이블의 학과별 학생 수**
+| DEPT | 인원 |
+| :--- | ---: |
+| 컴퓨터과 | 50 |
+| 인터넷과 | 100 |
+| 사무자동화과 | 50 |
+
+```sql
+SELECT DEPT FROM STUDENT;
+```
+**결과 행 수:** 200행
+
+```sql
+SELECT DISTINCT DEPT FROM STUDENT;
+```
+**결과 행 수:** 3행
+
+```sql
+SELECT COUNT(DISTINCT DEPT)
+FROM STUDENT
+WHERE DEPT = '컴퓨터과';
+```
+**결과:** 1
+
+> `COUNT(DISTINCT DEPT)`는 학생 수가 아니라 조건을 만족한 서로 다른 학과명의 개수를 셉니다.
 
 ---
 
@@ -474,6 +522,43 @@ WHERE 점수 > ANY (SELECT 점수 FROM 성적
 | S001 | 데이터베이스 | 90 |
 | S003 | 데이터베이스 | 95 |
 
+### 예시 5: JOIN + AVG 서브쿼리 + COUNT ★2026년 1회차★
+조인 후 `WHERE`절에서 서브쿼리의 평균값보다 큰 행만 남기고, 마지막에 `COUNT(*)`로 행 수를 셀 수 있습니다.
+
+**[EMPLOYEE] 테이블**
+| EMP_ID | DEP_ID |
+| :--- | :--- |
+| E01 | D01 |
+| E02 | D01 |
+| E03 | D02 |
+| E04 | D03 |
+| E05 | D03 |
+
+**[DEPT] 테이블**
+| DEPT_ID | BUDGET |
+| :--- | ---: |
+| D01 | 100 |
+| D02 | 200 |
+| D03 | 300 |
+
+```sql
+SELECT COUNT(*)
+FROM EMPLOYEE E
+JOIN DEPT D ON E.DEP_ID = D.DEPT_ID
+WHERE D.BUDGET > (
+    SELECT AVG(BUDGET)
+    FROM DEPT
+);
+```
+
+**동작 과정:**
+1. `SELECT AVG(BUDGET) FROM DEPT` → `(100 + 200 + 300) / 3 = 200`
+2. `D.BUDGET > 200`인 부서는 `D03`
+3. `EMPLOYEE`에서 `D03`에 속한 행은 `E04`, `E05`
+4. `COUNT(*)` 결과는 `2`
+
+> **핵심:** `COUNT(*)`는 실제 출력 행을 보여주는 것이 아니라, 조건을 통과한 행의 개수만 반환합니다.
+
 ---
 
 ## 5. 조인 (JOIN)
@@ -754,4 +839,7 @@ REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;
 10. **뷰:** 논리적(가상) 테이블, 독립성 제공, 보안성 향상
 11. **외래키 참조 옵션:** CASCADE(연쇄), SET NULL, SET DEFAULT, RESTRICT(거부), NO ACTION
 12. **LIKE 와일드카드:** %(0개 이상 문자), _(1개 문자)
-13. **NULL 연산:** 산술→NULL, 비교→UNKNOWN, 검사는 IS NULL/IS NOT NULL만 사용
+13. **DISTINCT:** 중복값 제거, `COUNT(DISTINCT 칼럼)`은 중복 제거 후 개수 계산
+14. **외래키 제약조건:** `CONSTRAINT 이름 FOREIGN KEY (자식칼럼) REFERENCES 부모테이블(부모칼럼)`
+15. **서브쿼리 COUNT:** 안쪽 쿼리 값을 먼저 구하고, 바깥 쿼리 조건 통과 행 수를 셈
+16. **NULL 연산:** 산술→NULL, 비교→UNKNOWN, 검사는 IS NULL/IS NOT NULL만 사용
