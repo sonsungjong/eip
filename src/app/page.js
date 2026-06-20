@@ -1,6 +1,7 @@
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
+import DownloadList from "@/components/DownloadList";
 
 const GITHUB_OWNER = "sonsungjong";
 const GITHUB_REPO = "eip";
@@ -149,29 +150,7 @@ export default function Home() {
             자료 다운로드
           </h2>
 
-          {downloadFiles.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-zinc-800 bg-[#0a0a0a] p-8 text-center text-zinc-500">
-              등록된 다운로드 자료가 없습니다.
-            </div>
-          ) : (
-            <div className="grid gap-3">
-              {downloadFiles.map((file) => (
-                <a
-                  key={file.name}
-                  href={file.href}
-                  download
-                  className="group flex items-center justify-between rounded-xl border border-zinc-800 bg-[#0a0a0a] px-5 py-4 transition-all hover:border-zinc-600 hover:bg-[#101010]"
-                >
-                  <span className="font-medium text-zinc-200 group-hover:text-white">
-                    {file.name}
-                  </span>
-                  <span className="text-sm font-bold text-zinc-600 group-hover:text-zinc-300">
-                    Download
-                  </span>
-                </a>
-              ))}
-            </div>
-          )}
+          <DownloadList files={downloadFiles} />
         </div>
 
       </div>
